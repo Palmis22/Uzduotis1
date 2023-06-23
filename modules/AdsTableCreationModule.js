@@ -1,19 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js";
 import { getDatabase, ref, remove, get, set, update, push } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-database.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
+import {userRoleIdentifikcation} from "../modules/roleIdentificationModule.js";
 
 import { firebaseConfig } from "../firebase.js";
 import { universalModalFunctionality } from "./universalModalModule.js";
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth();
 
-// Main function which goes to the main.js
 function adsTableCreation(userID) {
     get(ref(database, 'ads/')).then((snapshot) => {
         const firebaseData = snapshot.val();
@@ -28,43 +25,49 @@ function adsTableCreation(userID) {
     });
 }
 
-// Ads rendering function
+
 function adsDisplay(firebaseData, favoritesData, userID) {
     const adsMainContainer = document.querySelector('.adsContainer');
     console.log(userID)
-    for (let data in firebaseData) {
+    userRoleIdentifikcation().then(log => {
 
-        let isFavorited = !!favoritesData && favoritesData[data + userID];
-        let isOwnerOrAdmin = (userID === firebaseData[data].userID ||
-            userID === 'tBmyoY8kdXUpDuoz5vnS1q1SsIe2');
-
-        adsMainContainer.innerHTML += `
-            <div class="card photo-card" data-id=${data} style="width: 18rem;">
-                <div class="photo-container">
-                    <img class="card-img-top" src=${firebaseData[data].picture} alt=${firebaseData[data].name}>
-                    <div class="favorite-logo-container">
-                        <i class="${isFavorited ? 'fa-solid' : 'fa-regular'} fa-star favoriteBtn" data-id=${data}></i>
+        for (let data in firebaseData) {
+    
+            let isFavorited = !!favoritesData && favoritesData[data + userID];
+            let isOwnerOrAdmin = (userID === firebaseData[data].userID ||
+                log == 'admin');
+                console.log(firebaseData[data])
+    
+            adsMainContainer.innerHTML += `
+                <div class="card photo-card" data-id=${data} style="width: 18rem;">
+                    <div class="photo-container">
+                        <img class="card-img-top" src=${firebaseData[data].picture} alt=${firebaseData[data].name}>
+                        <div class="favorite-logo-container">
+                            <i class="${isFavorited ? 'fa-solid' : 'fa-regular'} fa-star favoriteBtn" data-id=${data}></i>
+                        </div>
+                        <div class="fa-solid-container">
+                            <i class="fa-solid fa-square-minus adsDelI ${isOwnerOrAdmin ? 'deleteAdsBtn' : ''}"></i>
+                            <i class="fa-solid fa-square-pen adsUpdateI ${isOwnerOrAdmin ? 'updateAdsBtn' : ''}"></i>
+                            <i class="fa-solid fa-comment-dots commentBtn"></i>
+                        </div>
                     </div>
-                    <div class="fa-solid-container">
-                        <i class="fa-solid fa-square-minus adsDelI ${isOwnerOrAdmin ? 'deleteAdsBtn' : ''}"></i>
-                        <i class="fa-solid fa-square-pen adsUpdateI ${isOwnerOrAdmin ? 'updateAdsBtn' : ''}"></i>
-                        <i class="fa-solid fa-comment-dots commentBtn"></i>
+                    <div class="card-body">
+                        <h3 class="card-title photo-title">${firebaseData[data].name}</h3>
+                        <h5 class="card-title">${firebaseData[data].category}</h5>
+                        <p class="card-text">${firebaseData[data].text}</p>
                     </div>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title photo-title">${firebaseData[data].name}</h3>
-                    <h5 class="card-title">${firebaseData[data].category}</h5>
-                    <p class="card-text">${firebaseData[data].text}</p>
-                </div>
-                <div class="price-container">
-                    <div class="price">${firebaseData[data].price}</div>
-                </div>
-            </div>`
-    };
+                    <div class="price-container">
+                        <div class="price">${firebaseData[data].price}</div>
+                    </div>
+                </div>`
+        };
+    
+    
     favoriteBtnsFunctionality(userID);
     modalComentFunctionality(userID);
     deleteAdsBtnFunctionality();
     updateAdsBtnsFunctionality();
+})
 };
 
 
@@ -109,7 +112,7 @@ function favoriteBtnsFunctionality(userID) {
     })
 }
 
-// function for displaying filtering buttons
+
 function filterBtnsDisplay(firebaseData, userID) {
     const filterBtnContainer = document.querySelector('.filter-btn-container');
     const categoriesList = ['all'];
@@ -145,7 +148,7 @@ function filterBtnsFunctionality(firebaseData, userID) {
             get(ref(database, 'favorites/')).then((favsnapshot) => {
                 const newFavoriteAdsData = favsnapshot.val();
 
-                // We create an empty object to hold the filtered information from the ad database.
+      
                 let filteredFavData = {};
 
                 for (const adID in firebaseData) {
@@ -173,8 +176,7 @@ function searchBtnFunctionality(firebaseData, userID) {
 
     const searchBtn = document.getElementById('searchAdsBtn');
     const adsMainContainer = document.querySelector('.adsContainer');
-    // We create an empty object to hold the filtered information from the ad database.
-
+   
 
     searchBtn.addEventListener('click', () => {
         const searchInput = document.getElementById('searchInput');
@@ -228,14 +230,14 @@ function addCommentsHeader(adsID, userID) {
         modal.classList.remove('open-modal');
     })
 
-    // closing modal by pressing not on modal but on document
+
     window.addEventListener('click', function (e) {
         if (e.target === modal) {
             modal.classList.remove('open-modal');
         }
     })
 
-    // closing modal by pressing ESC key
+ 
     document.addEventListener('keydown', evt => {
         if (evt.key === 'Escape') {
             modal.classList.remove('open-modal');
@@ -243,18 +245,18 @@ function addCommentsHeader(adsID, userID) {
     });
 
 
-    // comments rendering using uniqueID
+  
     modalCommentsRender(userID, adsID)
 }
 
-// comments deleting function
+
 function delComment() {
     const commentDelBtns = document.querySelectorAll('.commentDelBtn');
 
     commentDelBtns.forEach(btn => {
 
         btn.addEventListener('click', () => {
-            console.log('paspaudziau')
+            console.log('spaudziu')
             const uniqueAdsBtnID = btn.parentElement.getAttribute('data-id');
             console.log(uniqueAdsBtnID)
             get(ref(database, `comments/${uniqueAdsBtnID}`)).then((snapshot) => {
@@ -277,7 +279,7 @@ function delComment() {
 }
 
 
-// modal wil start here
+
 function modalComentFunctionality(userID) {
     const modalContainer = document.querySelector('.modal-container');
 
@@ -297,7 +299,7 @@ function modalComentFunctionality(userID) {
             
             addCommentsHeader(uniquecommentBtnID, userID);
 
-            // modal functioning when its open
+          
             const commentBtn = document.getElementById('commentBtn');
             
             const commentInput = document.getElementById('commentInput');
@@ -326,7 +328,7 @@ function modalComentFunctionality(userID) {
 }
 
 function deleteAdsBtnFunctionality() {
-    // deleting ads from firebase
+
     const delAdsBtns = document.querySelectorAll('.deleteAdsBtn');
 
     delAdsBtns.forEach(btn => {
@@ -336,7 +338,7 @@ function deleteAdsBtnFunctionality() {
                 if (snapshot.exists()) {
                     remove(ref(database, `ads/${uniqueAdsBtnID}`))
                         .then(() => {
-                            universalModalFunctionality('Your event deleted successfully!');
+                            universalModalFunctionality('Your advertisement deleted successfully!');
                             window.location.reload();
                         })
                         .catch((error) => {
@@ -352,7 +354,7 @@ function deleteAdsBtnFunctionality() {
 }
 
 function updateAdsBtnsFunctionality() {
-    // update buttons
+  
     const updateAdsBtns = document.querySelectorAll('.updateAdsBtn');
 
     updateAdsBtns.forEach(btn => {
@@ -386,7 +388,7 @@ function updateAdsBtnsFunctionality() {
                         picture: adsPictureInput.value
                     })
                         .then(() => {
-                            universalModalFunctionality('Your event updated succsessfully!');
+                            universalModalFunctionality('Your advertisement updated succsessfully!');
                             window.location.reload();
                         })
                         .catch((error) => {

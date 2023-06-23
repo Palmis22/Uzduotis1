@@ -1,7 +1,7 @@
 function universalModalFunctionality(text) {
 
     const universalModalContainer = document.querySelector('.universal-modal-container');
-    // modalContainer.classList.add(d-flex flex-column justify-content)
+
     universalModalContainer.innerHTML = `
         <button class="close-btn-modal"><i class="fa-solid fa-rectangle-xmark"></i></button>
         <div class="d-flex justify-content-center align-items-center universal-module-div">
@@ -9,18 +9,18 @@ function universalModalFunctionality(text) {
         </div>`
 
 
-    // const commentBtns = document.querySelectorAll('.commentBtn');
+
     const universalModal = document.querySelector('.universal-modal-overlay');
     universalModal.classList.add('open-universal-modal');
     const closeBtn = document.querySelector('.close-btn-modal');
 
-    // closing modal by pressing X
+
     closeBtn.addEventListener('click', () => {
         universalModal.classList.remove('open-universal-modal');
     })
    
 
-    // closing modal by pressing anywhere on teh screen/document
+  
     window.addEventListener('click', function (e) {
 
         if (e.target === universalModal) {
@@ -28,7 +28,7 @@ function universalModalFunctionality(text) {
         }
     })
 
-    // closing modal by pressing ESC key
+   
     document.addEventListener('keydown', evt => {
         if (evt.key === 'Escape') {
             universalModal.classList.remove('open-universal-modal');

@@ -1,9 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js";
 import { getDatabase, set, ref, remove, get } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-database.js";
 import { getAuth, } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
 
 import { firebaseConfig } from "../firebase.js";
 import { universalModalFunctionality } from "./universalModalModule.js";
@@ -107,7 +104,7 @@ function delCategoryBtnsFunction() {
         if (snapshot.exists()) {
           remove(ref(database, `categories/${uniqueBtnID}`))
             .then(() => {
-              // universalModalFunctionality('Category deleted successfully');
+             
               window.location.reload();
             })
             .catch((error) => {
@@ -122,7 +119,7 @@ function delCategoryBtnsFunction() {
 }
 
 function categoryTable() {
-  // making functions to build catgeory tables from firebase
+
   get(ref(database, 'categories/')).then((snapshot) => {
     const userData = snapshot.val();
 
@@ -131,7 +128,7 @@ function categoryTable() {
 
     const categoryBtn = document.querySelector('.enterCategoryBtn');
 
-    // saving category data to firebase
+  
     categoryBtn.addEventListener('click', addCategoryBtnFunction)
     delCategoryBtnsFunction();
   });

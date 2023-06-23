@@ -1,8 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js";
 import { getDatabase, ref, remove, get, set, update } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-database.js";
 import { getAuth, deleteUser} from "https://www.gstatic.com/firebasejs/9.16.0/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 
 import { firebaseConfig } from "../firebase.js";

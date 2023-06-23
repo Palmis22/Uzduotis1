@@ -1,19 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js";
 import { getDatabase, ref, remove, get, set, push } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-database.js";
 import { getAuth, } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 
 import { firebaseConfig } from "../firebase.js";
 import { universalModalFunctionality } from "./universalModalModule.js";
 
-// Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth();
 
-// Main function responsible for rendering Ads registration form
 function creatingAdsForm() {
 
     const mainAdsFormContainer = document.querySelector('.mainAdsFormContainer');
@@ -78,7 +75,7 @@ function creatingAdsForm() {
 
     uploadAdsBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        // checking if input fields are not emty
+       
         if (adsNameInput.value.length < 5) {
             universalModalFunctionality('Event name should be more than 5 symbols');
         } else if (adsSelectInput.value === 'Select category') {
@@ -90,7 +87,7 @@ function creatingAdsForm() {
         } else if (adsPictureInput.value.length < 10) {
             universalModalFunctionality('Please insert HTML photo link');
         } else {
-            // if inputs not empty uploading information to database
+          
             const user = auth.currentUser;
             set(push(ref(database, 'ads/')), {
                 name: adsNameInput.value,
@@ -101,8 +98,7 @@ function creatingAdsForm() {
                 userID: user.uid
             })
                 .then(() => {
-                    // after uploading info getting modal message
-                    // universalModalFunctionality('Event uploaded successfully');
+             
                     window.location.reload();
                 })
                 .catch((error) => {
